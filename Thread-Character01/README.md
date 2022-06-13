@@ -76,33 +76,7 @@ public class ThreadStyle extends Thread {
 - 使用继承Thread的方式的话，那么每次想新建一个任务，只能新建一个独立的线程，而这样做的损耗会比较大（比如重头开始创建一个线程、执行完毕以后再销毁等。如果线程的实际工作内容，也就是run()函数里只是简单的打印一行文字的话，那么可能线程的实际工作内容还不如损耗来的大）。如果使用Runnable和线程池，就可以大大减小这样的损耗。
 - 继承Thread类以后，由于Java语言不支持双继承，这样就无法再继承其他的类，限制了可扩展性。
 
-### 小结
-
-现在有如下的代码（相当于两种方法的混合体），那么执行结果是什么呢？
-
-```java
-public class BothStyle {
-    public static void main(String[] args) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Runnable");
-            }
-        }) {
-            @Override
-            public void run() {
-                System.out.println("Thread");
-            }
-        }.start();
-    }
-}
-```
-
-输出的结果是Thread，虽然我们通过Runnable方式传入了trager对象，但是由于使用Thread方式会重写run()，所以传入的对象并不会执行。
-
-我们只能通过新建Thread类这一种方式来创建线程，但是类里面的run方法有两种方式来实现，第一种是重写run方法，第二种实现Runnable接口的run方法，然后再把该runnable实例传给Thread类。
-
-## 线程池
+### 线程池
 
 > 线程池的本质还是新建Thread类这一种方式来创建线程，并非是实现多线程的另一种方式。
 
@@ -162,3 +136,30 @@ class Task implements Runnable {
 ```
 
 可见本质还是通过new Thread的方式来创建线程的。
+
+### 小结
+
+现在有如下的代码（相当于两种方法的混合体），那么执行结果是什么呢？
+
+```java
+public class BothStyle {
+    public static void main(String[] args) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Runnable");
+            }
+        }) {
+            @Override
+            public void run() {
+                System.out.println("Thread");
+            }
+        }.start();
+    }
+}
+```
+
+输出的结果是Thread，虽然我们通过Runnable方式传入了trager对象，但是由于使用Thread方式会重写run()，所以传入的对象并不会执行。
+
+我们只能通过新建Thread类这一种方式来创建线程，但是类里面的run方法有两种方式来实现，第一种是重写run方法，第二种实现Runnable接口的run方法，然后再把该runnable实例传给Thread类。
+
